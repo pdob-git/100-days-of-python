@@ -10,17 +10,15 @@ import os
 import pathlib
 
 import pandas as pd
+# noinspection PyUnresolvedReferences
+from IPython.display import display  # Used for commented data display block # noqa: F401
 from dotenv import load_dotenv
 
-# noinspection PyUnresolvedReferences
-from IPython.display import display  # Used for commented data display block # noqa: F401 
-
-#Load constant from environment file
+# Load constant from environment file
 load_dotenv()
 MORSE_CODE_JSON = os.getenv("MORSE_CODE_JSON")
 MORSE_CODE_KEY_VALUE_JSON = os.getenv("MORSE_CODE_KEY_VALUE_JSON")
 MORSE_CONVERSION_DATA_XLS = os.getenv("MORSE_CONVERSION_DATA_XLS")
-
 
 
 def load_data_to_df(folder_path: str) -> pd.DataFrame:
@@ -74,8 +72,7 @@ def to_json_key_value(folder_path: str, morse_data_df: pd.DataFrame):
     # Check how to be json looks like
     print("Morse conversion table json format:")
     print(morse_json_format)
-    save_json(folder_path, MORSE_CODE_KEY_VALUE_JSON,morse_json_format)
-
+    save_json(folder_path, MORSE_CODE_KEY_VALUE_JSON, morse_json_format)
 
 
 def to_json(folder_path: str, morse_data_df: pd.DataFrame):
@@ -88,17 +85,17 @@ def to_json(folder_path: str, morse_data_df: pd.DataFrame):
     :param morse_data_df: pandas.DataFrame with Morse Conversions
     """
 
-    morse_dict = { row["key"]: row["morse_code"] for (index, row) in morse_data_df.iterrows()}
+    morse_dict = {row["key"]: row["morse_code"] for (index, row) in morse_data_df.iterrows()}
     json_string = json.dumps(morse_dict, indent=4, ensure_ascii=False)
 
     # Check how to be json looks like
     print("Morse conversion table json format:")
     print(json_string)
 
-    save_json(folder_path, MORSE_CODE_JSON,json_string)
+    save_json(folder_path, MORSE_CODE_JSON, json_string)
 
 
-def save_json(folder_path, file_name:str, json_string:str):
+def save_json(folder_path, file_name: str, json_string: str):
     """Saves string JSON format to file
 
     :param folder_path: target save folder
@@ -122,6 +119,6 @@ def main():
     to_json_key_value(folder_path, morse_data_df)
     to_json(folder_path, morse_data_df)
 
+
 if __name__ == '__main__':
     main()
-

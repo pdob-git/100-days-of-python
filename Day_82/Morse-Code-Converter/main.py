@@ -5,6 +5,7 @@ Polish letters included: https://pl.wikipedia.org/wiki/Kod_Morse%E2%80%99a
 """
 
 import json
+import sys
 
 MORSE_CODE_JSON = "data/morse_code.json"
 
@@ -23,31 +24,46 @@ def load_json(path: str) -> dict[str, str]:
     return data
 
 
-def convert_to_morse(string: str, conversion_dict:dict[str,str]):
+def encode_to_morse(string: str, conversion_dict: dict[str, str]):
+    """Encodes strings in Morse Code
 
-    morse_list = [converter(char, conversion_dict) for char in string.upper()]
+    :param string: string to be encoded
+    :param conversion_dict: dictionary with conversions
+    """
+
     print(f"Source string:\n{string}")
-    # print(f"Morse result list: {morse_list}")
-    morse_string = "".join(morse_list)
-    print(f"Morse result:\n{morse_string}")
+    try:
+        morse_list = [encoder(char, conversion_dict) for char in string.upper()]
+        # print(f"Morse result list: {morse_list}")
+        morse_string = "".join(morse_list)
+        print(f"Morse result:\n{morse_string}")
+    except KeyError as err:
+        error_msg = str(err)
+        sys.exit(f"Error occurred:  Char {error_msg} is not supported.")
 
 
+def encoder(char: str, conversion_dict: dict[str, str]) -> str:
+    """Encodes char in Morse Code
 
-def converter(char:str, conversion_dict:dict[str,str])->str:
-    if char in conversion_dict:
-        return "{} ".format(conversion_dict[char])
-    else:
+    :param char: char to encode
+    :param conversion_dict: dictionary with conversions
+    :raises: KeyError with not supported character
+    :return: converted Morse code
+    """
+
+    if char == "\n":
         return char
+    return "{} ".format(conversion_dict[char])
 
 
 def main():
     loaded_dict = load_json(MORSE_CODE_JSON)
     # print(loaded_dict)
-    convert_to_morse("Mama ma kota\nSOS\nYEAH!",loaded_dict)
-    convert_to_morse("An exception has occurred!",loaded_dict)
+    encode_to_morse("Mama ma kota\nSOS\nYEAH!", loaded_dict)
+    encode_to_morse("An exception has occurred!~", loaded_dict)
 
 
 if __name__ == '__main__':
     main()
 
-#TODO Add doc strings and exception handling
+# TODO Add decode
